@@ -1,0 +1,188 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 0,
+ "autoname": "hash",
+ "creation": "2025-01-27 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Transaction",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "site_registration",
+  "sync_date",
+  "column_break_1",
+  "company",
+  "client_type",
+  "section_break_2",
+  "total_sales_invoices",
+  "total_credit_notes",
+  "column_break_3",
+  "total_purchase_invoices",
+  "total_stock_reconciliations",
+  "section_break_4",
+  "active_users",
+  "total_companies",
+  "column_break_5",
+  "ip_address",
+  "site_url",
+  "section_break_6",
+  "subscription_package",
+  "package_status",
+  "column_break_7",
+  "subscription_start_date",
+  "subscription_end_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "site_registration",
+   "fieldtype": "Link",
+   "label": "Site Registration",
+   "options": "Site Registration",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sync_date",
+   "fieldtype": "Datetime",
+   "label": "Sync Date",
+   "reqd": 1,
+   "default": "Now"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company"
+  },
+  {
+   "fieldname": "client_type",
+   "fieldtype": "Select",
+   "label": "Client Type",
+   "options": "ERP\nMobile POS\nDesktop POS\nFiscalisation"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Transaction Counts"
+  },
+  {
+   "fieldname": "total_sales_invoices",
+   "fieldtype": "Int",
+   "label": "Total Sales Invoices",
+   "default": 0
+  },
+  {
+   "fieldname": "total_credit_notes",
+   "fieldtype": "Int",
+   "label": "Total Credit Notes",
+   "default": 0
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_purchase_invoices",
+   "fieldtype": "Int",
+   "label": "Total Purchase Invoices",
+   "default": 0
+  },
+  {
+   "fieldname": "total_stock_reconciliations",
+   "fieldtype": "Int",
+   "label": "Total Stock Reconciliations",
+   "default": 0
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break",
+   "label": "User & Company Info"
+  },
+  {
+   "fieldname": "active_users",
+   "fieldtype": "Int",
+   "label": "Active Users",
+   "default": 0
+  },
+  {
+   "fieldname": "total_companies",
+   "fieldtype": "Int",
+   "label": "Total Companies",
+   "default": 0
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "label": "IP Address"
+  },
+  {
+   "fieldname": "site_url",
+   "fieldtype": "Data",
+   "label": "Site URL"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break",
+   "label": "Subscription Info"
+  },
+  {
+   "fieldname": "subscription_package",
+   "fieldtype": "Link",
+   "label": "Subscription Package",
+   "options": "Subscription Package"
+  },
+  {
+   "fieldname": "package_status",
+   "fieldtype": "Select",
+   "label": "Package Status",
+   "options": "Active\nExpired"
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "subscription_start_date",
+   "fieldtype": "Date",
+   "label": "Subscription Start Date"
+  },
+  {
+   "fieldname": "subscription_end_date",
+   "fieldtype": "Date",
+   "label": "Subscription End Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-27 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Sass Manager",
+ "name": "Site Data Sync",
+ "naming_rule": "By hash",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

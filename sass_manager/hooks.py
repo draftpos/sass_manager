@@ -1,7 +1,7 @@
 app_name = "sass_manager"
-app_title = "Sass Manager"
+app_title = "SaaS Manager"
 app_publisher = "nasirucode"
-app_description = "Sass Manager"
+app_description = "Main SaaS management app for managing multiple ERPNext client sites"
 app_email = "akingbolahan12@gmail.com"
 app_license = "mit"
 
@@ -148,23 +148,17 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"sass_manager.tasks.all"
-# 	],
-# 	"daily": [
-# 		"sass_manager.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"sass_manager.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"sass_manager.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"sass_manager.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"hourly": [
+		"sass_manager.sass_manager.tasks.hourly"
+	],
+	"daily": [
+		"sass_manager.sass_manager.tasks.daily"
+	],
+	"weekly": [
+		"sass_manager.sass_manager.tasks.weekly"
+	],
+}
 
 # Testing
 # -------
