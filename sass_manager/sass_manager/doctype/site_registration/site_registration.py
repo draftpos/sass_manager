@@ -40,7 +40,12 @@ class SiteRegistration(Document):
 	def validate(self):
 		"""Validate subscription dates"""
 		if self.subscription_start_date and self.subscription_end_date:
-			if self.subscription_end_date < self.subscription_start_date:
+			from frappe.utils import getdate
+			# Ensure dates are date objects, not strings
+			start_date = getdate(self.subscription_start_date) if self.subscription_start_date else None
+			end_date = getdate(self.subscription_end_date) if self.subscription_end_date else None
+			
+			if start_date and end_date and end_date < start_date:
 				frappe.throw("Subscription End Date cannot be before Start Date")
 
 	def on_update(self):
@@ -50,13 +55,16 @@ class SiteRegistration(Document):
 		is_active_changed = previous_is_active != self.is_active
 		
 		if self.subscription_end_date:
-			from frappe.utils import today
-			if self.subscription_end_date < today():
+			from frappe.utils import today, getdate
+			# Ensure subscription_end_date is a date object, not a string
+			subscription_end_date = getdate(self.subscription_end_date) if self.subscription_end_date else None
+			
+			if subscription_end_date and subscription_end_date < today():
 				if self.subscription_status == "Active":
 					self.subscription_status = "Expired"
 					self.is_active = 0
 					is_active_changed = True
-			elif self.subscription_status == "Expired" and self.subscription_end_date >= today():
+			elif self.subscription_status == "Expired" and subscription_end_date and subscription_end_date >= today():
 				if self.is_active:
 					self.subscription_status = "Active"
 					is_active_changed = True
