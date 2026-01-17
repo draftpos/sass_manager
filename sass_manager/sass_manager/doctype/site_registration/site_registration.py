@@ -123,3 +123,90 @@ class SiteRegistration(Document):
 				f"Error notifying client site about maintenance mode: {str(e)}",
 				"Site Maintenance Mode Error"
 			)
+
+
+@frappe.whitelist()
+def set_maintenance_mode(site_name, maintenance_mode):
+	"""
+	Manually set or remove maintenance mode for a site
+	Called from the UI button
+	
+	Args:
+		site_name: Name of the Site Registration document
+		maintenance_mode: 1 to enable, 0 to disable
+	
+	Returns:
+		dict: Status of the operation
+	"""
+	try:
+		# Get the site registration document
+		site_reg = frappe.get_doc("Site Registration", site_name)
+		
+		if not site_reg.site_url or not site_reg.api_key:
+			return {
+				"status": "error",
+				"message": "Site URL or API key is missing"
+			}
+		
+		# Convert maintenance_mode to int if it's a string
+		if isinstance(maintenance_mode, str):
+			maintenance_mode = int(maintenance_mode)
+		
+		# Prepare API endpoint
+		api_endpoint = f"{site_reg.site_url}/api/method/sass_client.api.maintenance_api.set_maintenance_mode"
+		
+		# Make API call to client site
+		response = requests.post(
+			api_endpoint,
+			json={
+				"api_key": site_reg.api_key,
+				"maintenance_mode": maintenance_mode
+			},
+			timeout=10
+		)
+		
+		if response.status_code == 200:
+			result = response.json()
+			if result.get("message", {}).get("status") == "success":
+				frappe.logger().info(
+					f"Maintenance mode {'enabled' if maintenance_mode else 'disabled'} "
+					f"for site {site_reg.site_name} ({site_reg.site_url}) via manual action"
+				)
+				return {
+					"status": "success",
+					"message": f"Maintenance mode {'enabled' if maintenance_mode else 'disabled'} successfully"
+				}
+			else:
+				error_msg = result.get("message", {}).get("message", "Unknown error")
+				frappe.log_error(
+					f"Failed to set maintenance mode for site {site_reg.site_name}: {error_msg}",
+					"Site Maintenance Mode Error"
+				)
+				return {
+					"status": "error",
+					"message": error_msg
+				}
+		else:
+			error_msg = f"HTTP error: {response.status_code}"
+			frappe.log_error(
+				f"HTTP error setting maintenance mode for site {site_reg.site_name}: {response.status_code}",
+				"Site Maintenance Mode Error"
+			)
+			return {
+				"status": "error",
+				"message": error_msg
+			}
+	except frappe.DoesNotExistError:
+		return {
+			"status": "error",
+			"message": f"Site Registration {site_name} not found"
+		}
+	except Exception as e:
+		frappe.log_error(
+			f"Error setting maintenance mode for site {site_name}: {str(e)}",
+			"Site Maintenance Mode Error"
+		)
+		return {
+			"status": "error",
+			"message": str(e)
+		}
