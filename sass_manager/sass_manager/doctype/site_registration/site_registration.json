@@ -25,6 +25,7 @@
   "subscription_end_date",
   "column_break_5",
   "is_active",
+  "allow_reads_during_maintenance",
   "last_sync",
   "section_break_6",
   "notes"
@@ -114,6 +115,13 @@
    "fieldtype": "Check",
    "label": "Is Active",
    "default": 0
+  },
+  {
+   "fieldname": "allow_reads_during_maintenance",
+   "fieldtype": "Check",
+   "label": "Allow Reads During Maintenance",
+   "default": 1,
+   "description": "If enabled, allows read operations during maintenance mode. This allows the maintenance API to remain accessible."
   },
   {
    "fieldname": "last_sync",

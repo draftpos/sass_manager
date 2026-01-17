@@ -88,7 +88,7 @@ def set_maintenance_mode_for_inactive_sites():
 			filters={
 				"is_active": 0
 			},
-			fields=["name", "site_url", "api_key", "site_name", "subscription_status"]
+			fields=["name", "site_url", "api_key", "site_name", "subscription_status", "allow_reads_during_maintenance"]
 		)
 		
 		for site in inactive_sites:
@@ -99,6 +99,9 @@ def set_maintenance_mode_for_inactive_sites():
 				# Determine maintenance mode: 1 for inactive sites
 				maintenance_mode = 1
 				
+				# Get allow_reads_during_maintenance setting (default to True if not set)
+				allow_reads = site.get("allow_reads_during_maintenance", True) if site.get("allow_reads_during_maintenance") is not None else True
+				
 				# Prepare API endpoint
 				api_endpoint = f"{site.site_url}/api/method/sass_client.api.maintenance_api.set_maintenance_mode"
 				
@@ -107,7 +110,8 @@ def set_maintenance_mode_for_inactive_sites():
 					api_endpoint,
 					json={
 						"api_key": site.api_key,
-						"maintenance_mode": maintenance_mode
+						"maintenance_mode": maintenance_mode,
+						"allow_reads_during_maintenance": 1 if allow_reads else 0
 					},
 					timeout=10
 				)

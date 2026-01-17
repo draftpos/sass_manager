@@ -90,13 +90,21 @@ class SiteRegistration(Document):
 			# Prepare API endpoint
 			api_endpoint = f"{self.site_url}/api/method/sass_client.api.maintenance_api.set_maintenance_mode"
 			
+			# Prepare payload - only include allow_reads_during_maintenance when enabling maintenance mode
+			payload = {
+				"api_key": self.api_key,
+				"maintenance_mode": maintenance_mode
+			}
+			
+			# Get allow_reads_during_maintenance setting when enabling maintenance mode
+			if maintenance_mode == 1:
+				allow_reads = getattr(self, 'allow_reads_during_maintenance', True)
+				payload["allow_reads_during_maintenance"] = 1 if allow_reads else 0
+			
 			# Make API call to client site
 			response = requests.post(
 				api_endpoint,
-				json={
-					"api_key": self.api_key,
-					"maintenance_mode": maintenance_mode
-				},
+				json=payload,
 				timeout=10
 			)
 			
@@ -165,16 +173,24 @@ def set_maintenance_mode(site_name, maintenance_mode):
 		if isinstance(maintenance_mode, str):
 			maintenance_mode = int(maintenance_mode)
 		
+		# Prepare payload
+		payload = {
+			"api_key": site_reg.api_key,
+			"maintenance_mode": maintenance_mode
+		}
+		
+		# Get allow_reads_during_maintenance setting when enabling maintenance mode
+		if maintenance_mode == 1:
+			allow_reads = getattr(site_reg, 'allow_reads_during_maintenance', True)
+			payload["allow_reads_during_maintenance"] = 1 if allow_reads else 0
+		
 		# Prepare API endpoint
 		api_endpoint = f"{site_reg.site_url}/api/method/sass_client.api.maintenance_api.set_maintenance_mode"
 		
 		# Make API call to client site
 		response = requests.post(
 			api_endpoint,
-			json={
-				"api_key": site_reg.api_key,
-				"maintenance_mode": maintenance_mode
-			},
+			json=payload,
 			timeout=10
 		)
 		
