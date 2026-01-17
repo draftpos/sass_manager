@@ -58,13 +58,15 @@ class SiteRegistration(Document):
 			from frappe.utils import today, getdate
 			# Ensure subscription_end_date is a date object, not a string
 			subscription_end_date = getdate(self.subscription_end_date) if self.subscription_end_date else None
+			# Ensure today() result is converted to date object for comparison (today() returns string)
+			today_date = getdate(today())
 			
-			if subscription_end_date and subscription_end_date < today():
+			if subscription_end_date and subscription_end_date < today_date:
 				if self.subscription_status == "Active":
 					self.subscription_status = "Expired"
 					self.is_active = 0
 					is_active_changed = True
-			elif self.subscription_status == "Expired" and subscription_end_date and subscription_end_date >= today():
+			elif self.subscription_status == "Expired" and subscription_end_date and subscription_end_date >= today_date:
 				if self.is_active:
 					self.subscription_status = "Active"
 					is_active_changed = True
