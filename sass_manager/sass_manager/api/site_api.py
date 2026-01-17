@@ -113,13 +113,35 @@ def sync_site_data(api_key=None, data=None):
 		
 		# Parse date strings to date objects if they exist
 		from frappe.utils import getdate
+		from datetime import date, datetime
+		
 		subscription_start_date = data.get("subscription_start_date")
 		if subscription_start_date:
-			subscription_start_date = getdate(subscription_start_date)
+			try:
+				# Only convert if it's a string, otherwise use as is if already a date object
+				if isinstance(subscription_start_date, str):
+					subscription_start_date = getdate(subscription_start_date)
+				elif not isinstance(subscription_start_date, (date, datetime)):
+					# Try to convert other types
+					subscription_start_date = getdate(str(subscription_start_date))
+			except (ValueError, TypeError):
+				subscription_start_date = None
+		else:
+			subscription_start_date = None
 		
 		subscription_end_date = data.get("subscription_end_date")
 		if subscription_end_date:
-			subscription_end_date = getdate(subscription_end_date)
+			try:
+				# Only convert if it's a string, otherwise use as is if already a date object
+				if isinstance(subscription_end_date, str):
+					subscription_end_date = getdate(subscription_end_date)
+				elif not isinstance(subscription_end_date, (date, datetime)):
+					# Try to convert other types
+					subscription_end_date = getdate(str(subscription_end_date))
+			except (ValueError, TypeError):
+				subscription_end_date = None
+		else:
+			subscription_end_date = None
 		
 		# Create sync record
 		sync_doc = frappe.get_doc({
@@ -144,8 +166,8 @@ def sync_site_data(api_key=None, data=None):
 		sync_doc.insert(ignore_permissions=True)
 		
 		# Update site registration with latest sync time
-		site_reg.last_sync = now()
-		site_reg.save(ignore_permissions=True)
+		# Use db_set to avoid triggering on_update which might have date comparison issues
+		site_reg.db_set("last_sync", now(), update_modified=False)
 		
 		return {
 			"status": "success",
