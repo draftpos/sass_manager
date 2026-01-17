@@ -1,6 +1,15 @@
 {
- "charts": [],
- "content": "[{\"id\":\"c-VZKZZk_z\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">SASS Manager</span>\",\"col\":12}},{\"id\":\"Hbx5DE49hG\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"LH1YqnciA8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Site Registration\",\"col\":3}},{\"id\":\"3Pqcs8u-cK\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Site Data Sync\",\"col\":3}},{\"id\":\"Aptwt0sz91\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Deposit\",\"col\":3}},{\"id\":\"GptNRYUeyX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Package Feature\",\"col\":3}},{\"id\":\"AJKFKVHyrN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Subscription Package\",\"col\":3}},{\"id\":\"Q2KKJi6Sg2\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
+ "charts": [
+  {
+   "chart_name": "Site Status Tracking",
+   "label": "Site Status Tracking"
+  },
+  {
+   "chart_name": "Site Data Sync",
+   "label": "Site Data Sync"
+  }
+ ],
+ "content": "[{\"id\":\"c-VZKZZk_z\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">SASS Manager</span>\",\"col\":12}},{\"id\":\"Hbx5DE49hG\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"LH1YqnciA8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Site Registration\",\"col\":3}},{\"id\":\"3Pqcs8u-cK\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Site Data Sync\",\"col\":3}},{\"id\":\"Aptwt0sz91\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Deposit\",\"col\":3}},{\"id\":\"GptNRYUeyX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Package Feature\",\"col\":3}},{\"id\":\"AJKFKVHyrN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Subscription Package\",\"col\":3}},{\"id\":\"Q2KKJi6Sg2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"0ay2nX8-oi\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Site Status Tracking\",\"col\":12}},{\"id\":\"mhdPVFMuPT\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Site Data Sync\",\"col\":12}}]",
  "creation": "2026-01-15 13:28:57.111778",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +22,7 @@
  "is_hidden": 0,
  "label": "SASS Manager",
  "links": [],
- "modified": "2026-01-17 23:03:42.463740",
+ "modified": "2026-01-18 00:39:15.854588",
  "modified_by": "Administrator",
  "module": "Sass Manager",
  "name": "SASS Manager",
