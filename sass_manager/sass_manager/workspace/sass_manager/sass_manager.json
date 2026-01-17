@@ -1,0 +1,70 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"c-VZKZZk_z\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">SASS Manager</span>\",\"col\":12}},{\"id\":\"Hbx5DE49hG\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"LH1YqnciA8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Site Registration\",\"col\":3}},{\"id\":\"3Pqcs8u-cK\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Site Data Sync\",\"col\":3}},{\"id\":\"Aptwt0sz91\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Deposit\",\"col\":3}},{\"id\":\"GptNRYUeyX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Package Feature\",\"col\":3}},{\"id\":\"AJKFKVHyrN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Subscription Package\",\"col\":3}},{\"id\":\"Q2KKJi6Sg2\",\"type\":\"spacer\",\"data\":{\"col\":12}}]",
+ "creation": "2026-01-15 13:28:57.111778",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "upload-lg",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "SASS Manager",
+ "links": [],
+ "modified": "2026-01-17 23:03:42.463740",
+ "modified_by": "Administrator",
+ "module": "Sass Manager",
+ "name": "SASS Manager",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Site Registration",
+   "link_to": "Site Registration",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Site Data Sync",
+   "link_to": "Site Data Sync",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "User Deposit",
+   "link_to": "User Deposit",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Package Feature",
+   "link_to": "Package Feature",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Subscription Package",
+   "link_to": "Subscription Package",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "SASS Manager"
+}
