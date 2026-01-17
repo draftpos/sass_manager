@@ -120,23 +120,24 @@ def set_maintenance_mode_for_inactive_sites():
 						)
 					else:
 						frappe.log_error(
+                            "Site Maintenance Mode Scheduler Error",
 							f"Failed to set maintenance mode for site {site.site_name}: "
-							f"{result.get('message', {}).get('message')}",
-							"Site Maintenance Mode Scheduler Error"
+							f"{result.get('message', {}).get('message')}"
+							
 						)
 				else:
 					frappe.log_error(
+                        "Site Maintenance Mode Scheduler Error",
 						f"HTTP error setting maintenance mode for site {site.site_name}: "
-						f"{response.status_code}",
-						"Site Maintenance Mode Scheduler Error"
+						f"{response.status_code}"
+						
 					)
 			except Exception as e:
 				frappe.log_error(
-					f"Error setting maintenance mode for site {site.site_name}: {str(e)}",
-					"Site Maintenance Mode Scheduler Error"
+                    "Site Maintenance Mode Scheduler Error",
+					f"Error setting maintenance mode for site {site.site_name}: {str(e)}"
+					
 				)
-		
-		frappe.logger().info(f"Maintenance mode check completed for {len(inactive_sites)} inactive sites")
-		
+				
 	except Exception as e:
-		frappe.log_error(f"Error in set_maintenance_mode_for_inactive_sites: {str(e)}", "Site Maintenance Mode Scheduler Error")
+		frappe.log_error("Site Maintenance Mode Scheduler Error", f"Error in set_maintenance_mode_for_inactive_sites: {str(e)}")
