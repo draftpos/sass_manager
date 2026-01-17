@@ -111,6 +111,16 @@ def sync_site_data(api_key=None, data=None):
 		if isinstance(data, str):
 			data = json.loads(data)
 		
+		# Parse date strings to date objects if they exist
+		from frappe.utils import getdate
+		subscription_start_date = data.get("subscription_start_date")
+		if subscription_start_date:
+			subscription_start_date = getdate(subscription_start_date)
+		
+		subscription_end_date = data.get("subscription_end_date")
+		if subscription_end_date:
+			subscription_end_date = getdate(subscription_end_date)
+		
 		# Create sync record
 		sync_doc = frappe.get_doc({
 			"doctype": "Site Data Sync",
@@ -128,8 +138,8 @@ def sync_site_data(api_key=None, data=None):
 			"site_url": data.get("site_url") or site_reg.site_url,
 			"subscription_package": data.get("subscription_package"),
 			"package_status": data.get("package_status", "Expired"),
-			"subscription_start_date": data.get("subscription_start_date"),
-			"subscription_end_date": data.get("subscription_end_date")
+			"subscription_start_date": subscription_start_date,
+			"subscription_end_date": subscription_end_date
 		})
 		sync_doc.insert(ignore_permissions=True)
 		
