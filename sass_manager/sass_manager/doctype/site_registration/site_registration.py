@@ -109,29 +109,32 @@ class SiteRegistration(Document):
 					)
 				else:
 					frappe.log_error(
+						"Site Maintenance Mode Error",
 						f"Failed to set maintenance mode for site {self.site_name}: "
 						f"{result.get('message', {}).get('message')}",
-						"Site Maintenance Mode Error"
+						
 					)
 			elif response.status_code == 503:
 				# Site is in maintenance mode and cannot respond
 				frappe.log_error(
+					"Site Maintenance Mode Error",
 					f"503 error - Site {self.site_name} is in maintenance mode and unreachable. "
 					f"Maintenance mode may need to be removed manually.",
-					"Site Maintenance Mode Error"
+					
 				)
 			else:
 				error_text = response.text[:200] if response.text else ""
 				frappe.log_error(
+					"Site Maintenance Mode Error",
 					f"HTTP error setting maintenance mode for site {self.site_name}: "
-					f"{response.status_code} - {error_text}",
-					"Site Maintenance Mode Error"
+					f"{response.status_code} - {error_text}"
+					
 				)
 		except Exception as e:
 			# Log error but don't fail the document save
 			frappe.log_error(
-				f"Error notifying client site about maintenance mode: {str(e)}",
-				"Site Maintenance Mode Error"
+				"Site Maintenance Mode Error",
+				f"Error notifying client site about maintenance mode: {str(e)}"
 			)
 
 
@@ -189,8 +192,9 @@ def set_maintenance_mode(site_name, maintenance_mode):
 			else:
 				error_msg = result.get("message", {}).get("message", "Unknown error")
 				frappe.log_error(
-					f"Failed to set maintenance mode for site {site_reg.site_name}: {error_msg}",
-					"Site Maintenance Mode Error"
+					"Site Maintenance Mode Error",
+					f"Failed to set maintenance mode for site {site_reg.site_name}: {error_msg}"
+					
 				)
 				return {
 					"status": "error",
@@ -206,9 +210,10 @@ def set_maintenance_mode(site_name, maintenance_mode):
 				"'bench --site [site_name] set-maintenance-mode off'"
 			)
 			frappe.log_error(
+				"Site Maintenance Mode Error",
 				f"503 error - Site {site_reg.site_name} is in maintenance mode and unreachable. "
-				f"Maintenance mode must be removed manually on the client site.",
-				"Site Maintenance Mode Error"
+				f"Maintenance mode must be removed manually on the client site."
+				
 			)
 			return {
 				"status": "error",
@@ -225,8 +230,9 @@ def set_maintenance_mode(site_name, maintenance_mode):
 					error_msg = f"HTTP {response.status_code}: {response.text[:200]}"
 			
 			frappe.log_error(
-				f"HTTP error setting maintenance mode for site {site_reg.site_name}: {response.status_code} - {error_msg}",
-				"Site Maintenance Mode Error"
+				"Site Maintenance Mode Error",
+				f"HTTP error setting maintenance mode for site {site_reg.site_name}: {response.status_code} - {error_msg}"
+				
 			)
 			return {
 				"status": "error",
@@ -239,8 +245,9 @@ def set_maintenance_mode(site_name, maintenance_mode):
 		}
 	except Exception as e:
 		frappe.log_error(
-			f"Error setting maintenance mode for site {site_name}: {str(e)}",
-			"Site Maintenance Mode Error"
+			"Site Maintenance Mode Error",
+			f"Error setting maintenance mode for site {site_name}: {str(e)}"
+			
 		)
 		return {
 			"status": "error",
