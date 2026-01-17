@@ -98,7 +98,10 @@ class SiteRegistration(Document):
 			
 			# Get allow_reads_during_maintenance setting when enabling maintenance mode
 			if maintenance_mode == 1:
-				allow_reads = getattr(self, 'allow_reads_during_maintenance', True)
+				# Read checkbox value directly - can be 0, 1, or None (defaults to 1 if not set)
+				allow_reads = self.get('allow_reads_during_maintenance')
+				if allow_reads is None:
+					allow_reads = 1  # Default to True if not set
 				payload["allow_reads_during_maintenance"] = 1 if allow_reads else 0
 			
 			# Make API call to client site
@@ -181,7 +184,10 @@ def set_maintenance_mode(site_name, maintenance_mode):
 		
 		# Get allow_reads_during_maintenance setting when enabling maintenance mode
 		if maintenance_mode == 1:
-			allow_reads = getattr(site_reg, 'allow_reads_during_maintenance', True)
+			# Read checkbox value directly - can be 0, 1, or None (defaults to 1 if not set)
+			allow_reads = site_reg.get('allow_reads_during_maintenance')
+			if allow_reads is None:
+				allow_reads = 1  # Default to True if not set
 			payload["allow_reads_during_maintenance"] = 1 if allow_reads else 0
 		
 		# Prepare API endpoint

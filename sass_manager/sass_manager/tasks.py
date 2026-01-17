@@ -100,7 +100,11 @@ def set_maintenance_mode_for_inactive_sites():
 				maintenance_mode = 1
 				
 				# Get allow_reads_during_maintenance setting (default to True if not set)
-				allow_reads = site.get("allow_reads_during_maintenance", True) if site.get("allow_reads_during_maintenance") is not None else True
+				# Read checkbox value directly - can be 0, 1, or None (defaults to 1 if not set)
+				allow_reads = site.get("allow_reads_during_maintenance")
+				if allow_reads is None:
+					allow_reads = 1  # Default to True if not set
+				allow_reads = 1 if allow_reads else 0
 				
 				# Prepare API endpoint
 				api_endpoint = f"{site.site_url}/api/method/sass_client.api.maintenance_api.set_maintenance_mode"
