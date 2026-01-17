@@ -64,7 +64,7 @@ frappe.ui.form.on('Site Registration', {
 							frappe.show_alert({
 								message: __('Maintenance mode disabled successfully'),
 								indicator: 'green'
-							});
+							}, 5);
 							frm.reload_doc();
 						} else {
 							let errorMsg = r.message?.message || 'Unknown error';
@@ -78,7 +78,7 @@ frappe.ui.form.on('Site Registration', {
 								frappe.show_alert({
 									message: instructions,
 									indicator: 'orange'
-								});
+								}, 10);
 							} else {
 								frappe.show_alert({
 									message: __('Failed to remove maintenance mode: ') + errorMsg,
