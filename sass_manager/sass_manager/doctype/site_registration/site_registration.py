@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import random_string
 from datetime import datetime
+import requests
 
 
 class SiteRegistration(Document):
@@ -43,13 +44,74 @@ class SiteRegistration(Document):
 				frappe.throw("Subscription End Date cannot be before Start Date")
 
 	def on_update(self):
-		"""Update subscription status based on dates"""
+		"""Update subscription status based on dates and notify client site"""
+		# Check if is_active has changed
+		previous_is_active = frappe.db.get_value("Site Registration", self.name, "is_active")
+		is_active_changed = previous_is_active != self.is_active
+		
 		if self.subscription_end_date:
 			from frappe.utils import today
 			if self.subscription_end_date < today():
 				if self.subscription_status == "Active":
 					self.subscription_status = "Expired"
 					self.is_active = 0
+					is_active_changed = True
 			elif self.subscription_status == "Expired" and self.subscription_end_date >= today():
 				if self.is_active:
 					self.subscription_status = "Active"
+					is_active_changed = True
+		
+		# Notify client site about maintenance mode change
+		if is_active_changed:
+			self._notify_client_site_maintenance_mode()
+	
+	def _notify_client_site_maintenance_mode(self):
+		"""
+		Notify client site to set maintenance mode based on is_active status
+		If site is not active, enable maintenance mode; if active, disable it
+		"""
+		try:
+			if not self.site_url or not self.api_key:
+				return
+			
+			# Determine maintenance mode: 1 if inactive, 0 if active
+			maintenance_mode = 0 if self.is_active else 1
+			
+			# Prepare API endpoint
+			api_endpoint = f"{self.site_url}/api/method/sass_client.api.maintenance_api.set_maintenance_mode"
+			
+			# Make API call to client site
+			response = requests.post(
+				api_endpoint,
+				json={
+					"api_key": self.api_key,
+					"maintenance_mode": maintenance_mode
+				},
+				timeout=10
+			)
+			
+			if response.status_code == 200:
+				result = response.json()
+				if result.get("message", {}).get("status") == "success":
+					frappe.logger().info(
+						f"Maintenance mode {'enabled' if maintenance_mode else 'disabled'} "
+						f"for site {self.site_name} ({self.site_url})"
+					)
+				else:
+					frappe.log_error(
+						f"Failed to set maintenance mode for site {self.site_name}: "
+						f"{result.get('message', {}).get('message')}",
+						"Site Maintenance Mode Error"
+					)
+			else:
+				frappe.log_error(
+					f"HTTP error setting maintenance mode for site {self.site_name}: "
+					f"{response.status_code}",
+					"Site Maintenance Mode Error"
+				)
+		except Exception as e:
+			# Log error but don't fail the document save
+			frappe.log_error(
+				f"Error notifying client site about maintenance mode: {str(e)}",
+				"Site Maintenance Mode Error"
+			)
