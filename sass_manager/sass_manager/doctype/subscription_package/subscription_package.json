@@ -1,87 +1,76 @@
 {
  "actions": [],
- "allow_import": 1,
- "allow_rename": 0,
+ "allow_rename": 1,
  "autoname": "field:package_name",
- "creation": "2025-01-27 00:00:00.000000",
+ "creation": "2026-01-18 09:59:52.747245",
  "doctype": "DocType",
- "document_type": "Setup",
- "editable_grid": 1,
  "engine": "InnoDB",
- "is_child": 0,
  "field_order": [
   "package_name",
   "package_code",
-  "column_break_1",
+  "is_active",
+  "column_break_uznp",
   "max_users",
   "price",
-  "currency",
-  "section_break_2",
-  "description",
-  "is_active",
-  "section_break_3"
-],
+  "section_break_wzfo",
+  "description"
+ ],
  "fields": [
   {
    "fieldname": "package_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Package Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "package_code",
-   "fieldtype": "Data",
-   "label": "Package Code",
    "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "column_break_1",
+   "fieldname": "package_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Package Code",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
+  },
+  {
+   "fieldname": "column_break_uznp",
    "fieldtype": "Column Break"
   },
   {
    "fieldname": "max_users",
    "fieldtype": "Int",
-   "label": "Maximum Users",
+   "in_list_view": 1,
+   "label": "Max Users",
+   "non_negative": 1,
    "reqd": 1
   },
   {
    "fieldname": "price",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Price",
+   "non_negative": 1,
    "reqd": 1
   },
   {
-   "fieldname": "currency",
-   "fieldtype": "Link",
-   "label": "Currency",
-   "options": "Currency",
-   "reqd": 1
-  },
-  {
-   "fieldname": "section_break_2",
+   "fieldname": "section_break_wzfo",
    "fieldtype": "Section Break"
   },
   {
    "fieldname": "description",
-   "fieldtype": "Text Editor",
+   "fieldtype": "Small Text",
    "label": "Description"
-  },
-  {
-   "fieldname": "is_active",
-   "fieldtype": "Check",
-   "label": "Is Active",
-   "default": 1
-  },
-  {
-   "fieldname": "section_break_3",
-   "fieldtype": "Section Break",
-   "label": "Features"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-27 00:00:00.000000",
+ "modified": "2026-01-18 10:03:21.025999",
  "modified_by": "Administrator",
  "module": "Sass Manager",
  "name": "Subscription Package",
@@ -101,6 +90,8 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
