@@ -19,9 +19,8 @@
   "section_break_2",
   "description",
   "is_active",
-  "section_break_3",
-  "features"
- ],
+  "section_break_3"
+],
  "fields": [
   {
    "fieldname": "package_name",
@@ -78,12 +77,6 @@
    "fieldname": "section_break_3",
    "fieldtype": "Section Break",
    "label": "Features"
-  },
-  {
-   "fieldname": "features",
-   "fieldtype": "Table",
-   "label": "Features",
-   "options": "Package Feature"
   }
  ],
  "index_web_pages_for_search": 1,
