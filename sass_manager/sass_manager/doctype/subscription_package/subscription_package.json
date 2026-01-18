@@ -8,6 +8,7 @@
  "document_type": "Setup",
  "editable_grid": 1,
  "engine": "InnoDB",
+ "is_child": 0,
  "field_order": [
   "package_name",
   "package_code",

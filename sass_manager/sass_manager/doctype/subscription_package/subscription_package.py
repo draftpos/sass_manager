@@ -13,6 +13,7 @@ class SubscriptionPackage(Document):
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
+		from sass_manager.sass_manager.doctype.package_feature.package_feature import PackageFeature
 
 		currency: DF.Link
 		description: DF.TextEditor | None
