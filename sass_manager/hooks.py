@@ -148,17 +148,17 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {
-	"hourly": [
-		"sass_manager.sass_manager.tasks.hourly"
-	],
-	"daily": [
-		"sass_manager.sass_manager.tasks.daily"
-	],
-	"weekly": [
-		"sass_manager.sass_manager.tasks.weekly"
-	],
-}
+# scheduler_events = {
+# 	"hourly": [
+# 		"sass_manager.sass_manager.tasks.hourly"
+# 	],
+# 	"daily": [
+# 		"sass_manager.sass_manager.tasks.daily"
+# 	],
+# 	"weekly": [
+# 		"sass_manager.sass_manager.tasks.weekly"
+# 	],
+# }
 
 # Testing
 # -------

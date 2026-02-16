@@ -67,120 +67,101 @@ def register_site(site_url, site_name, company=None, client_type=None, ip_addres
 
 @frappe.whitelist(allow_guest=True)
 def sync_site_data(api_key=None, data=None):
-	"""
-	Sync site data from client site to main SaaS manager
-	
-	Args:
-		api_key: API key for authentication
-		data: Dictionary containing site data (can be JSON string or dict):
-			- total_sales_invoices
-			- total_credit_notes
-			- total_purchase_invoices
-			- total_stock_reconciliations
-			- active_users
-			- total_companies
-			- company
-			- client_type
-			- ip_address
-			- site_url
-			- subscription_package
-			- package_status (Active/Expired)
-			- subscription_start_date
-			- subscription_end_date
-	
-	Returns:
-		dict: Sync status
-	"""
-	try:
-		# Handle JSON data from request
-		if not api_key and frappe.request:
-			request_data = frappe.request.json if hasattr(frappe.request, 'json') else {}
-			api_key = request_data.get("api_key") or api_key
-			data = request_data.get("data") or data
-		
-		# Validate API key
-		if not api_key or not frappe.db.exists("Site Registration", {"api_key": api_key}):
-			return {
-				"status": "error",
-				"message": "Invalid API key"
-			}
-		
-		site_reg = frappe.get_doc("Site Registration", {"api_key": api_key})
-		
-		# Parse data if it's a string
-		if isinstance(data, str):
-			data = json.loads(data)
-		
-		# Parse date strings to date objects if they exist
-		from frappe.utils import getdate
-		from datetime import date, datetime
-		
-		subscription_start_date = data.get("subscription_start_date")
-		if subscription_start_date:
-			try:
-				# Only convert if it's a string, otherwise use as is if already a date object
-				if isinstance(subscription_start_date, str):
-					subscription_start_date = getdate(subscription_start_date)
-				elif not isinstance(subscription_start_date, (date, datetime)):
-					# Try to convert other types
-					subscription_start_date = getdate(str(subscription_start_date))
-			except (ValueError, TypeError):
-				subscription_start_date = None
-		else:
-			subscription_start_date = None
-		
-		subscription_end_date = data.get("subscription_end_date")
-		if subscription_end_date:
-			try:
-				# Only convert if it's a string, otherwise use as is if already a date object
-				if isinstance(subscription_end_date, str):
-					subscription_end_date = getdate(subscription_end_date)
-				elif not isinstance(subscription_end_date, (date, datetime)):
-					# Try to convert other types
-					subscription_end_date = getdate(str(subscription_end_date))
-			except (ValueError, TypeError):
-				subscription_end_date = None
-		else:
-			subscription_end_date = None
-		
-		# Create sync record
-		sync_doc = frappe.get_doc({
-			"doctype": "Site Data Sync",
-			"site_registration": site_reg.name,
-			"sync_date": now(),
-			"company": data.get("company"),
-			"client_type": data.get("client_type"),
-			"total_sales_invoices": data.get("total_sales_invoices", 0),
-			"total_credit_notes": data.get("total_credit_notes", 0),
-			"total_purchase_invoices": data.get("total_purchase_invoices", 0),
-			"total_stock_reconciliations": data.get("total_stock_reconciliations", 0),
-			"active_users": data.get("active_users", 0),
-			"total_companies": data.get("total_companies", 0),
-			"ip_address": data.get("ip_address"),
-			"site_url": data.get("site_url") or site_reg.site_url,
-			"subscription_package": data.get("subscription_package"),
-			"package_status": data.get("package_status", "Expired"),
-			"subscription_start_date": subscription_start_date,
-			"subscription_end_date": subscription_end_date
-		})
-		sync_doc.insert(ignore_permissions=True)
-		
-		# Update site registration with latest sync time
-		# Use db_set to avoid triggering on_update which might have date comparison issues
-		site_reg.db_set("last_sync", now(), update_modified=False)
-		
-		return {
-			"status": "success",
-			"message": "Data synced successfully",
-			"sync_id": sync_doc.name
-		}
-	except Exception as e:
-		frappe.log_error(f"Error syncing site data: {str(e)}")
-		return {
-			"status": "error",
-			"message": str(e)
-		}
+    """
+    Sync site data from client site to main SaaS manager
+    """
+    try:
+        # Handle JSON data from request
+        if not api_key and frappe.request:
+            request_data = frappe.request.json if hasattr(frappe.request, 'json') else {}
+            api_key = request_data.get("api_key") or api_key
+            data = request_data.get("data") or data
 
+        # Validate API key
+        if not api_key or not frappe.db.exists("Site Registration", {"api_key": api_key}):
+            return {"status": "error", "message": "Invalid API key"}
+
+        site_reg = frappe.get_doc("Site Registration", {"api_key": api_key})
+
+        # Parse JSON string if needed
+        if isinstance(data, str):
+            data = json.loads(data)
+
+        from frappe.utils import getdate, now
+        from datetime import date, datetime
+
+        # Convert date strings
+        def parse_date(d):
+            if not d:
+                return None
+            if isinstance(d, str):
+                return getdate(d)
+            elif isinstance(d, (date, datetime)):
+                return d
+            else:
+                return getdate(str(d))
+
+        subscription_start_date = parse_date(data.get("subscription_start_date"))
+        subscription_end_date = parse_date(data.get("subscription_end_date"))
+
+        # Check if sync record exists for this site + company
+        existing = frappe.db.exists(
+            "Site Data Sync",
+            {"site_registration": site_reg.name, "company": data.get("company")}
+        )
+
+        if existing:
+            # Update existing record
+            sync_doc = frappe.get_doc("Site Data Sync", existing)
+            sync_doc.update({
+                "sync_date": now(),
+                "total_sales_invoices": data.get("total_sales_invoices", 0),
+                "total_credit_notes": data.get("total_credit_notes", 0),
+                "total_purchase_invoices": data.get("total_purchase_invoices", 0),
+                "total_stock_reconciliations": data.get("total_stock_reconciliations", 0),
+                "active_users": data.get("active_users", 0),
+                "total_companies": data.get("total_companies", 0),
+                "ip_address": data.get("ip_address"),
+                "site_url": data.get("site_url") or site_reg.site_url,
+                "subscription_package": data.get("subscription_package"),
+                "package_status": data.get("package_status", "Expired"),
+                "subscription_start_date": subscription_start_date,
+                "subscription_end_date": subscription_end_date
+            })
+            sync_doc.save(ignore_permissions=True)
+            action = "updated"
+        else:
+            # Insert new record
+            sync_doc = frappe.get_doc({
+                "doctype": "Site Data Sync",
+                "site_registration": site_reg.name,
+                "sync_date": now(),
+                "company": data.get("company"),
+                "client_type": data.get("client_type"),
+                "total_sales_invoices": data.get("total_sales_invoices", 0),
+                "total_credit_notes": data.get("total_credit_notes", 0),
+                "total_purchase_invoices": data.get("total_purchase_invoices", 0),
+                "total_stock_reconciliations": data.get("total_stock_reconciliations", 0),
+                "active_users": data.get("active_users", 0),
+                "total_companies": data.get("total_companies", 0),
+                "ip_address": data.get("ip_address"),
+                "site_url": data.get("site_url") or site_reg.site_url,
+                "subscription_package": data.get("subscription_package"),
+                "package_status": data.get("package_status", "Expired"),
+                "subscription_start_date": subscription_start_date,
+                "subscription_end_date": subscription_end_date
+            })
+            sync_doc.insert(ignore_permissions=True)
+            action = "created"
+
+        # Update last sync on site registration
+        site_reg.db_set("last_sync", now(), update_modified=False)
+
+        return {"status": "success", "message": f"Data {action} successfully", "sync_id": sync_doc.name}
+
+    except Exception as e:
+        frappe.log_error(f"Error syncing site data: {str(e)}")
+        return {"status": "error", "message": str(e)}
 
 @frappe.whitelist(allow_guest=True)
 def get_subscription_status(api_key):
