@@ -126,7 +126,8 @@ def sync_site_data(api_key=None, data=None):
                 "subscription_package": data.get("subscription_package"),
                 "package_status": data.get("package_status", "Expired"),
                 "subscription_start_date": subscription_start_date,
-                "subscription_end_date": subscription_end_date
+                "subscription_end_date": subscription_end_date,
+				"days_left": data.get("days_left")
             })
             sync_doc.save(ignore_permissions=True)
             action = "updated"
@@ -149,7 +150,8 @@ def sync_site_data(api_key=None, data=None):
                 "subscription_package": data.get("subscription_package"),
                 "package_status": data.get("package_status", "Expired"),
                 "subscription_start_date": subscription_start_date,
-                "subscription_end_date": subscription_end_date
+                "subscription_end_date": subscription_end_date,
+				"days_left": data.get("days_left")
             })
             sync_doc.insert(ignore_permissions=True)
             action = "created"

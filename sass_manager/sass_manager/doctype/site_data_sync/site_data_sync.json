@@ -28,6 +28,7 @@
   "section_break_6",
   "subscription_package",
   "package_status",
+  "days_left",
   "column_break_7",
   "subscription_start_date",
   "subscription_end_date"
@@ -177,11 +178,16 @@
    "fieldname": "subscription_end_date",
    "fieldtype": "Date",
    "label": "Subscription End Date"
+  },
+  {
+   "fieldname": "days_left",
+   "fieldtype": "Int",
+   "label": "Days Left"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 13:17:26.484087",
+ "modified": "2026-02-17 09:41:22.910110",
  "modified_by": "Administrator",
  "module": "Sass Manager",
  "name": "Site Data Sync",
