@@ -13,6 +13,7 @@
   "column_break_1",
   "company",
   "client_type",
+  "assigned",
   "section_break_2",
   "total_sales_invoices",
   "total_credit_notes",
@@ -183,11 +184,17 @@
    "fieldname": "days_left",
    "fieldtype": "Int",
    "label": "Days Left"
+  },
+  {
+   "default": "0",
+   "fieldname": "assigned",
+   "fieldtype": "Check",
+   "label": "Assigned"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-17 09:41:22.910110",
+ "modified": "2026-02-17 11:02:23.363952",
  "modified_by": "Administrator",
  "module": "Sass Manager",
  "name": "Site Data Sync",
