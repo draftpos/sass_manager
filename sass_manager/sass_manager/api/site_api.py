@@ -263,3 +263,110 @@ def update_subscription(api_key, subscription_package=None, subscription_status=
 			"status": "error",
 			"message": str(e)
 		}
+import frappe
+
+@frappe.whitelist(allow_guest=True)
+def get_oldest_unassigned_site():
+	"""
+	Get the oldest unassigned Site Data Sync record
+	"""
+	# Fetch oldest unassigned record
+	records = frappe.get_all(
+		"Site Data Sync",
+		filters={"assigned": 0},
+		fields=["name", "site_registration", "ip_address", "site_url"],
+		order_by="creation asc",
+		limit_page_length=1
+	)
+
+	if not records:
+		return {
+			"status": "empty",
+			"message": "No unassigned site records found"
+		}
+
+	record = records[0]
+
+	return {
+		"status": "success",
+		"site_registration": record.site_registration,
+		"ip_address": record.ip_address,
+		"site_url": record.site_url
+	}
+
+import frappe
+
+@frappe.whitelist(allow_guest=True)
+def get_user_by_email(email=None):
+	"""
+	Get User Management record by email
+	"""
+	if not email:
+		frappe.local.response["http_status_code"] = 400
+		return {
+			"status": "error",
+			"message": "Email is required"
+		}
+
+	user = frappe.get_all(
+		"User Management",
+		filters={"user_email": email},
+		fields=[
+			"user_email",
+			"site",
+			"company",
+			"site_url",
+			"ip_address"
+		],
+		limit_page_length=1
+	)
+
+	if not user:
+		frappe.local.response["http_status_code"] = 404
+		return {
+			"status": "not_found",
+			"message": "User not found, please register"
+		}
+
+	record = user[0]
+
+	return {
+		"status": "success",
+		"user_email": record.user_email,
+		"site": record.site,
+		"company": record.company,
+		"site_url": record.site_url,
+		"ip_address": record.ip_address
+	}
+import frappe
+@frappe.whitelist(allow_guest=True)
+def create_user_management():
+	data = frappe.form_dict  # 👈 THIS IS THE KEY
+
+	user_email = data.get("user_email")
+	site = data.get("site")
+	company = data.get("company")
+	site_url = data.get("site_url")
+	ip_address = data.get("ip_address")
+
+	if not user_email:
+		frappe.local.response["http_status_code"] = 400
+		return {"status": "error", "message": "Missing user_email"}
+
+	doc = frappe.get_doc({
+		"doctype": "User Management",
+		"user_email": user_email,
+		"site": site,
+		"company": company,
+		"site_url": site_url,
+		"ip_address": ip_address
+	})
+
+	doc.flags.ignore_permissions = True
+	doc.insert()
+	frappe.db.commit()
+
+	return {
+		"status": "success",
+		"user_email": user_email
+	}

@@ -194,7 +194,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-17 11:02:23.363952",
+ "modified": "2026-02-17 14:36:25.339222",
  "modified_by": "Administrator",
  "module": "Sass Manager",
  "name": "Site Data Sync",
@@ -215,8 +215,11 @@
   }
  ],
  "row_format": "Dynamic",
+ "search_fields": "site_registration",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "site_registration",
  "track_changes": 1
 }
