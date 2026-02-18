@@ -1,19 +1,23 @@
 {
  "actions": [],
  "allow_import": 1,
- "allow_rename": 0,
+ "allow_rename": 1,
  "autoname": "field:site_url",
- "creation": "2025-01-27 00:00:00.000000",
+ "creation": "2025-01-27 00:00:00",
  "doctype": "DocType",
- "document_type": "Master",
+ "document_type": "Setup",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "site_url",
   "site_name",
+  "new_site_name",
+  "email",
+  "username",
   "column_break_1",
   "ip_address",
   "api_key",
+  "old_url",
   "section_break_2",
   "company",
   "client_type",
@@ -34,6 +38,7 @@
   {
    "fieldname": "site_url",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Site URL",
    "reqd": 1,
    "unique": 1
@@ -41,6 +46,7 @@
   {
    "fieldname": "site_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Site Name",
    "reqd": 1
   },
@@ -85,11 +91,11 @@
    "options": "Subscription Package"
   },
   {
+   "default": "Pending",
    "fieldname": "subscription_status",
    "fieldtype": "Select",
    "label": "Subscription Status",
-   "options": "Active\nExpired\nPending\nCancelled",
-   "default": "Pending"
+   "options": "Active\nExpired\nPending\nCancelled"
   },
   {
    "fieldname": "section_break_4",
@@ -111,17 +117,17 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "0",
    "fieldname": "is_active",
    "fieldtype": "Check",
-   "label": "Is Active",
-   "default": 0
+   "label": "Is Active"
   },
   {
+   "default": "1",
+   "description": "If enabled, allows read operations during maintenance mode. This allows the maintenance API to remain accessible.",
    "fieldname": "allow_reads_during_maintenance",
    "fieldtype": "Check",
-   "label": "Allow Reads During Maintenance",
-   "default": 1,
-   "description": "If enabled, allows read operations during maintenance mode. This allows the maintenance API to remain accessible."
+   "label": "Allow Reads During Maintenance"
   },
   {
    "fieldname": "last_sync",
@@ -137,11 +143,31 @@
    "fieldname": "notes",
    "fieldtype": "Text Editor",
    "label": "Notes"
+  },
+  {
+   "fieldname": "new_site_name",
+   "fieldtype": "Data",
+   "label": "New SIte Name"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "old_url",
+   "fieldtype": "Data",
+   "label": "Old Url"
+  },
+  {
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "label": "Username"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-27 00:00:00.000000",
+ "modified": "2026-02-18 13:25:47.548805",
  "modified_by": "Administrator",
  "module": "Sass Manager",
  "name": "Site Registration",
@@ -159,8 +185,33 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Guest",
+   "share": 1,
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
