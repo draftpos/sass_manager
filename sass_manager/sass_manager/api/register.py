@@ -149,13 +149,13 @@ def register_new_site():
         doc.name=site_url
         doc.save()
         frappe.db.commit()
-        # create_admin_user_guest(
-        # base_url=site_url,
-        # username=username,
-        # email=email,
-        # password=password,
-        # company=company
-        # )
+        create_admin_user_guest(
+        base_url=site_url,
+        username=username,
+        email=email,
+        password=password,
+        company=company
+        )
 
         send_site_registration_email(
             gmail_user="chirovemunyaradzi@gmail.com",
