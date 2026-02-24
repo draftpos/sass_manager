@@ -75,13 +75,19 @@ def email_login(email=None):
 	}
 
 @frappe.whitelist(allow_guest=True)
-def register_new_site():
+@frappe.whitelist(allow_guest=True)
+def register_new_site(**kwargs): # Add **kwargs here
     """
     API endpoint to register a new site.
-    Checks if the site_url already exists and returns a message if it does.
+    Accepts data from frappe.form_dict (HTTP) or kwargs (Python call).
     """
-    data = frappe.form_dict
+    # Merge form_dict and kwargs so it works in both scenarios
+    data = frappe._dict(frappe.form_dict)
+    data.update(kwargs)
+
     site_name = data.get("site_name")
+    email = data.get("email")
+    # ... rest of your code using 'data.get' ...
     email = data.get("email")
     username = data.get("username")
     password = data.get("password")

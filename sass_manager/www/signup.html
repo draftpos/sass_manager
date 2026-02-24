@@ -1,0 +1,157 @@
+<!-- file: frappe-bench/apps/your_app/your_app/www/signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up - NewSite</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.signup-container {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 380px;
+}
+.signup-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+.signup-container input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.signup-container button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.signup-container button:hover {
+    background: #0056b3;
+}
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+}
+.success {
+    color: green;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div class="signup-container">
+    <h2>Create Your Account</h2>
+    <form id="signupForm">
+        <input type="email" name="email" placeholder="Email" required value="chirovemunyaradzi@gmail.com">
+        <input type="text" name="domain" placeholder="Domain" required value="newsite.com">
+        <input type="text" name="company" placeholder="Company" required value="tes2t">
+        <input type="text" name="username" placeholder="Username" required value="chaos">
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="repassword" placeholder="Re-enter Password" required>
+        <div class="error" id="errorMsg"></div>
+        <div class="success" id="successMsg"></div>
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+
+<script type="text/javascript">
+// === retry wrapper like your POS closeShift ===
+async function attemptWithRetries(fn, actionName = "Action", retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            return await fn();
+        } catch (err) {
+            console.warn(`${actionName} failed (attempt ${i+1}):`, err);
+            if (i === retries - 1) throw err;
+            await new Promise(res => setTimeout(res, delay));
+        }
+    }
+}
+
+// === simplified call.post ===
+const call = {
+    post: async function(method, data) {
+        const res = await fetch(`/api/method/${method}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            'X-Frappe-CSRF-Token': window.csrf_token ,// ✅ REQUIRED
+            credentials: 'same-origin',
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+            const errText = await res.text();
+            throw new Error(`HTTP ${res.status}: ${errText}`);
+        }
+
+        return res.json();
+    }
+};
+
+// === main signup handler ===
+$(document).ready(function(){
+    $('#signupForm').on('submit', async function(e){
+        e.preventDefault();
+        $('#errorMsg').text('');
+        $('#successMsg').text('');
+
+        const password = $('input[name="password"]').val();
+        const repassword = $('input[name="repassword"]').val();
+
+        if(password !== repassword){
+            $('#errorMsg').text('Passwords do not match!');
+            return;
+        }
+
+        const data = {
+            email: $('input[name="email"]').val(),
+            domain: $('input[name="domain"]').val(),
+            company: $('input[name="company"]').val(),
+            username: $('input[name="username"]').val(),
+            password
+        };
+
+        try {
+            const result = await attemptWithRetries(async () => {
+                return await call.post("sass_manager.sass_manager.api.register.register_new_site", data);
+            }, "Register New Site", 3, 1000);
+
+            if(result.status === 'success'){
+                $('#successMsg').text(result.message || 'User created successfully!');
+                $('#signupForm')[0].reset();
+            } else {
+                $('#errorMsg').text(result.message || 'Something went wrong!');
+            }
+        } catch(err){
+            console.error(err);
+            $('#errorMsg').text('Network or server error!');
+        }
+    });
+});
+</script>
+</body>
+</html>
