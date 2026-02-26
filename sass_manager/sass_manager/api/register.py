@@ -75,7 +75,6 @@ def email_login(email=None):
 	}
 
 @frappe.whitelist(allow_guest=True)
-@frappe.whitelist(allow_guest=True)
 def register_new_site(**kwargs): # Add **kwargs here
     """
     API endpoint to register a new site.
@@ -141,6 +140,14 @@ def register_new_site(**kwargs): # Add **kwargs here
     if existing_site:
         # Update existing site
         doc = frappe.get_doc("Site Registration", existing_site[0].name)
+        create_admin_user_guest(
+            base_url=site_url,
+            username=username,
+            email=email,
+            password=password,
+            company=company
+        )
+
         # doc.site_url = site_url
         doc.email = email
         doc.company = company
@@ -150,22 +157,15 @@ def register_new_site(**kwargs): # Add **kwargs here
         doc.subscription_start_date = subscription_start_date
         doc.subscription_end_date = subscription_end_date
         doc.new_site_name = site_name
-        doc.old_url=doc.name,
+        doc.old_url=doc.name
         doc.username=username
-        doc.name=site_url
+        # doc.name=site_url
         doc.save()
         frappe.db.commit()
-        create_admin_user_guest(
-        base_url=site_url,
-        username=username,
-        email=email,
-        password=password,
-        company=company
-        )
 
         send_site_registration_email(
-            gmail_user="chirovemunyaradzi@gmail.com",
-            app_password="uftq mawx amqr nots",
+            gmail_user = frappe.conf.gmail_user,
+            app_password = frappe.conf.gmail_app_password,
             recipient_email=email,
             username=username,
             site_url=site_url,
@@ -173,12 +173,6 @@ def register_new_site(**kwargs): # Add **kwargs here
             company=company
         )
 
-    #     frappe.rename_doc(
-    #     "Site Registration",
-    #     doc.name,
-    #     site_url_new,
-    #     force=True 
-    # )
         return {
             "status": "success",
             "message": "Site registered successfully",
@@ -236,21 +230,12 @@ def create_admin_user_guest(
         )
 
         # Non-200 HTTP error
-        if response.status_code != 200:
-            return {
-                "status": "error",
-                "message": f"HTTP {response.status_code}",
-                "details": response.text
-            }
+        res = response.json()
+        payload = res.get("message", {})
 
-        try:
-            return response.json()
-        except ValueError:
-            return {
-                "status": "error",
-                "message": "Invalid JSON response",
-                "raw": response.text
-            }
+        if payload.get("status") != "success":
+            frappe.throw(payload.get("message", "Account creation failed"))
+        return payload
 
     except requests.exceptions.Timeout:
         return {
