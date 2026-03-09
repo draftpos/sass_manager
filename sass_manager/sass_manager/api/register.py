@@ -164,8 +164,6 @@ def register_new_site(**kwargs): # Add **kwargs here
         frappe.db.commit()
 
         send_site_registration_email(
-            gmail_user = frappe.conf.gmail_user,
-            app_password = frappe.conf.gmail_app_password,
             recipient_email=email,
             username=username,
             site_url=site_url,
