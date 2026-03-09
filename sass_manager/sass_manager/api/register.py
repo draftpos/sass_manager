@@ -194,8 +194,6 @@ def register_new_site(**kwargs): # Add **kwargs here
         "ip_address": ip_address,
     }
 
-import requests
-
 def create_admin_user_guest(
     base_url,
     username,
@@ -260,16 +258,18 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-
+@frappe.whitelist(allow_guest=True)
 def send_site_registration_email(
-    gmail_user,
-    app_password,
     recipient_email,
     username,
     site_url,
     ip_address,
     company
 ):
+    gmail_user = frappe.conf.gmail_user
+    app_password = frappe.conf.app_password
+
+    print(gmail_user, app_password, recipient_email, username, site_url, ip_address, company)
     """
     Send site registration email
     """
