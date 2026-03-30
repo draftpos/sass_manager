@@ -1,108 +1,181 @@
 {
- "actions": [],
- "autoname": "autoincrement",
- "creation": "2026-02-17 14:27:57.719509",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "user_email",
-  "site",
-  "company",
-  "column_break_ghdo",
-  "site_url",
-  "ip_address"
- ],
- "fields": [
-  {
-   "fieldname": "user_email",
-   "fieldtype": "Data",
-   "in_filter": 1,
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
-   "label": "User Email",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "site",
-   "fieldtype": "Link",
-   "in_filter": 1,
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
-   "label": "Site",
-   "options": "Site Registration"
-  },
-  {
-   "fieldname": "column_break_ghdo",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "site.company",
-   "fieldname": "company",
-   "fieldtype": "Data",
-   "in_filter": 1,
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
-   "label": "Company",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "site.site_url",
-   "fieldname": "site_url",
-   "fieldtype": "Data",
-   "in_filter": 1,
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
-   "label": "Site Url",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "site.ip_address",
-   "fieldname": "ip_address",
-   "fieldtype": "Data",
-   "in_filter": 1,
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
-   "label": "IP Address",
-   "read_only": 1
-  }
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-02-18 12:03:35.069236",
- "modified_by": "Administrator",
- "module": "Sass Manager",
- "name": "User Management",
- "naming_rule": "Autoincrement",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "row_format": "Dynamic",
- "rows_threshold_for_grid_search": 20,
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+    "actions": [],
+    "autoname": "autoincrement",
+    "creation": "2026-02-17 14:27:57.719509",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "user_email",
+        "username",
+        "column_break_ghdo",
+        "phone_number",
+        "company",
+        "site_url",
+        "first_name",
+        "last_name",
+        "ip_address",
+        "site_section",
+        "site",
+        "column_break_site",
+        "is_verified",
+        "verified_at",
+        "verification_section",
+        "verification_token",
+        "verification_token_expiry",
+        "created_at"
+    ],
+    "fields": [
+        {
+            "fieldname": "user_email",
+            "fieldtype": "Data",
+            "in_filter": 1,
+            "in_global_search": 1,
+            "in_list_view": 1,
+            "in_preview": 1,
+            "in_standard_filter": 1,
+            "label": "User Email",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "first_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "First Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "last_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Last Name"
+        },
+        {
+            "fieldname": "created_at",
+            "fieldtype": "Datetime",
+            "label": "Created At",
+            "read_only": 1
+        },
+        {
+            "fieldname": "is_verified",
+            "fieldtype": "Check",
+            "default": "0",
+            "label": "Is Verified"
+        },
+        {
+            "fieldname": "verified_at",
+            "fieldtype": "Datetime",
+            "label": "Verified At",
+            "read_only": 1
+        },
+        {
+            "fieldname": "verification_section",
+            "fieldtype": "Section Break",
+            "label": "Verification"
+        },
+        {
+            "fieldname": "verification_token",
+            "fieldtype": "Data",
+            "hidden": 1,
+            "label": "Verification Token"
+        },
+        {
+            "fieldname": "verification_token_expiry",
+            "fieldtype": "Date",
+            "label": "Verification Token Expiry"
+        },
+        {
+            "fieldname": "site",
+            "fieldtype": "Link",
+            "in_filter": 1,
+            "in_global_search": 1,
+            "in_list_view": 1,
+            "in_preview": 1,
+            "in_standard_filter": 1,
+            "label": "Site",
+            "options": "Site Registration"
+        },
+        {
+            "fieldname": "column_break_ghdo",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fetch_from": "site.company",
+            "fieldname": "company",
+            "fieldtype": "Data",
+            "in_filter": 1,
+            "in_global_search": 1,
+            "in_list_view": 1,
+            "in_preview": 1,
+            "in_standard_filter": 1,
+            "label": "Company",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "site.site_url",
+            "fieldname": "site_url",
+            "fieldtype": "Data",
+            "in_filter": 1,
+            "in_global_search": 1,
+            "in_list_view": 1,
+            "in_preview": 1,
+            "in_standard_filter": 1,
+            "label": "Site Url",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "site.ip_address",
+            "fieldname": "ip_address",
+            "fieldtype": "Data",
+            "in_filter": 1,
+            "in_global_search": 1,
+            "in_list_view": 1,
+            "in_preview": 1,
+            "in_standard_filter": 1,
+            "label": "IP Address",
+            "read_only": 1
+        },
+        {
+            "fieldname": "username",
+            "fieldtype": "Data",
+            "in_filter": 1,
+            "in_list_view": 1,
+            "label": "Username",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "phone_number",
+            "fieldtype": "Data",
+            "label": "Phone Number"
+        }
+    ],
+    "grid_page_length": 50,
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2026-02-18 12:03:35.069236",
+    "modified_by": "Administrator",
+    "module": "Sass Manager",
+    "name": "User Management",
+    "naming_rule": "Autoincrement",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "row_format": "Dynamic",
+    "rows_threshold_for_grid_search": 20,
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
 }
