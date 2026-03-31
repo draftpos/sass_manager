@@ -93,74 +93,74 @@ class UserService:
         }
     
 
-@staticmethod
-def create_admin_user_on_site(base_url, username, email, password, company, country):
-    """Create admin user on client site with proper error handling"""
-    try:
-        url = f"{base_url}/api/method/sass_client.api.user.create_admin_user"
-        
-        payload = {
-            "username": username,
-            "email": email,
-            "password": password,
-            "company": company,
-            "country": country
-        }
-        
-        response = requests.post(url, json=payload, timeout=15)
-        
-        # FIX 1: Check if response has content
-        if not response.text:
+    @staticmethod
+    def create_admin_user_on_site(base_url, username, email, password, company, country):
+        """Create admin user on client site with proper error handling"""
+        try:
+            url = f"{base_url}/api/method/sass_client.api.user.create_admin_user"
+            
+            payload = {
+                "username": username,
+                "email": email,
+                "password": password,
+                "company": company,
+                "country": country
+            }
+            
+            response = requests.post(url, json=payload, timeout=15)
+            
+            # FIX 1: Check if response has content
+            if not response.text:
+                return {
+                    "status": "error", 
+                    "message": f"Empty response from {base_url}. Site may not be ready."
+                }
+            
+            # FIX 2: Try to parse JSON with error handling
+            try:
+                res = response.json()
+            except Exception as json_error:
+                frappe.log_error(f"JSON Parse Error: {str(json_error)}", "Create Admin User")
+                frappe.log_error(f"Response text: {response.text[:500]}", "Create Admin User")
+                return {
+                    "status": "error",
+                    "message": f"Invalid response from site (not JSON): {response.text[:100]}"
+                }
+            
+            # FIX 3: Extract the inner message
+            payload_result = res.get("message", {})
+            
+            if not payload_result:
+                return {
+                    "status": "error",
+                    "message": f"Missing 'message' in response: {res}"
+                }
+            
+            if payload_result.get("status") != "success":
+                return {
+                    "status": "error",
+                    "message": payload_result.get("message", "Account creation failed")
+                }
+            
+            return payload_result
+            
+        except requests.exceptions.Timeout:
             return {
                 "status": "error", 
-                "message": f"Empty response from {base_url}. Site may not be ready."
+                "message": f"Request timed out to {base_url}"
             }
-        
-        # FIX 2: Try to parse JSON with error handling
-        try:
-            res = response.json()
-        except Exception as json_error:
-            frappe.log_error(f"JSON Parse Error: {str(json_error)}", "Create Admin User")
-            frappe.log_error(f"Response text: {response.text[:500]}", "Create Admin User")
+        except requests.exceptions.ConnectionError:
             return {
-                "status": "error",
-                "message": f"Invalid response from site (not JSON): {response.text[:100]}"
+                "status": "error", 
+                "message": f"Connection error: {base_url} is not reachable"
             }
-        
-        # FIX 3: Extract the inner message
-        payload_result = res.get("message", {})
-        
-        if not payload_result:
+        except Exception as e:
+            frappe.log_error(frappe.get_traceback(), "Create Admin User Error")
             return {
-                "status": "error",
-                "message": f"Missing 'message' in response: {res}"
+                "status": "error", 
+                "message": str(e)
             }
-        
-        if payload_result.get("status") != "success":
-            return {
-                "status": "error",
-                "message": payload_result.get("message", "Account creation failed")
-            }
-        
-        return payload_result
-        
-    except requests.exceptions.Timeout:
-        return {
-            "status": "error", 
-            "message": f"Request timed out to {base_url}"
-        }
-    except requests.exceptions.ConnectionError:
-        return {
-            "status": "error", 
-            "message": f"Connection error: {base_url} is not reachable"
-        }
-    except Exception as e:
-        frappe.log_error(frappe.get_traceback(), "Create Admin User Error")
-        return {
-            "status": "error", 
-            "message": str(e)
-        }
-        
+            
     @staticmethod
     def send_verification_email(email_data):
         """Send verification email with rollback support"""
