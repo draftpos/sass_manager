@@ -12,8 +12,9 @@ class SiteModel:
             "Site Data Sync",
             filters={"assigned": 0},
             fields=["name", "site_registration", "ip_address", "site_url"],
-            order_by="creation asc",
-            limit_page_length=10
+            order_by="creation asc"
+            # ,
+            # limit_page_length=50
         )
         
         if not records:
