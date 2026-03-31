@@ -41,7 +41,7 @@ class SiteModel:
                 verify=False,
                 allow_redirects=True
             )
-            return response.status_code < 200
+            return response.status_code == 200
         except (ConnectionError, Timeout, RequestException):
             return False
         except Exception:
