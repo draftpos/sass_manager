@@ -92,69 +92,69 @@ class UserService:
             "expiry_date": expiry_date
         }
     
-        @staticmethod
-        def create_admin_user_on_site(base_url, username, email, password, company, country):
-            """Create admin user on client site with proper error handling"""
+    @staticmethod
+    def create_admin_user_on_site(base_url, username, email, password, company, country):
+        """Create admin user on client site with proper error handling"""
+        try:
+            url = f"{base_url}/api/method/sass_client.api.user.create_admin_user"
+            
+            payload = {
+                "username": username,
+                "email": email,
+                "password": password,
+                "company": company,
+                "country": country
+            }
+            
+            response = requests.post(url, params=payload, timeout=15)
+            
+            # Check if response has content
+            if not response.text:
+                return {
+                    "status": "error", 
+                    "message": f"Empty response from {base_url}"
+                }
+            
+            # Parse JSON response
             try:
-                url = f"{base_url}/api/method/sass_client.api.user.create_admin_user"
-                
-                payload = {
-                    "username": username,
-                    "email": email,
-                    "password": password,
-                    "company": company,
-                    "country": country
-                }
-                
-                response = requests.post(url, params=payload, timeout=15)
-                
-                # Check if response has content
-                if not response.text:
-                    return {
-                        "status": "error", 
-                        "message": f"Empty response from {base_url}"
-                    }
-                
-                # Parse JSON response
-                try:
-                    res = response.json()
-                except Exception as json_error:
-                    return {
-                        "status": "error",
-                        "message": f"Invalid response from site: {response.text[:100]}"
-                    }
-                
-                # The response is nested: {"message": {...}}
-                # Extract the actual result from the "message" key
-                if "message" in res:
-                    result = res["message"]
-                else:
-                    result = res
-                
-                # Check if the result indicates success
-                if result.get("status") == "success":
-                    return result
-                else:
-                    return {
-                        "status": "error",
-                        "message": result.get("message", "Account creation failed")
-                    }
-                
-            except requests.exceptions.Timeout:
+                res = response.json()
+            except Exception as json_error:
                 return {
-                    "status": "error", 
-                    "message": f"Request timed out to {base_url}"
+                    "status": "error",
+                    "message": f"Invalid response from site: {response.text[:100]}"
                 }
-            except requests.exceptions.ConnectionError:
+            
+            # The response is nested: {"message": {...}}
+            # Extract the actual result from the "message" key
+            if "message" in res:
+                result = res["message"]
+            else:
+                result = res
+            
+            # Check if the result indicates success
+            if result.get("status") == "success":
+                return result
+            else:
                 return {
-                    "status": "error", 
-                    "message": f"Connection error: {base_url} is not reachable"
+                    "status": "error",
+                    "message": result.get("message", "Account creation failed")
                 }
-            except Exception as e:
-                return {
-                    "status": "error", 
-                    "message": str(e)
-                }
+            
+        except requests.exceptions.Timeout:
+            return {
+                "status": "error", 
+                "message": f"Request timed out to {base_url}"
+            }
+        except requests.exceptions.ConnectionError:
+            return {
+                "status": "error", 
+                "message": f"Connection error: {base_url} is not reachable"
+            }
+        except Exception as e:
+            return {
+                "status": "error", 
+                "message": str(e)
+            }
     @staticmethod
     def send_verification_email(email_data):
         """Send verification email with rollback support"""
