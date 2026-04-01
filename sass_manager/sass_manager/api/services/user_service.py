@@ -107,7 +107,8 @@ class UserService:
                 "country": country
             }
             
-            response = requests.post(url, json=payload, timeout=15)
+            # CHANGE THIS LINE - use params instead of json
+            response = requests.post(url, params=payload, timeout=15)
             
             # FIX 1: Check if response has content
             if not response.text:
@@ -127,22 +128,15 @@ class UserService:
                     "message": f"Invalid response from site (not JSON): {response.text[:100]}"
                 }
             
-            # FIX 3: Extract the inner message
-            payload_result = res.get("message", {})
-            
-            if not payload_result:
+            # The response from create_admin_user is already the result, not nested in "message"
+            # So we check res directly
+            if res.get("status") != "success":
                 return {
                     "status": "error",
-                    "message": f"Missing 'message' in response: {res}"
+                    "message": res.get("message", "Account creation failed")
                 }
             
-            if payload_result.get("status") != "success":
-                return {
-                    "status": "error",
-                    "message": payload_result.get("message", "Account creation failed")
-                }
-            
-            return payload_result
+            return res
             
         except requests.exceptions.Timeout:
             return {
@@ -159,8 +153,7 @@ class UserService:
             return {
                 "status": "error", 
                 "message": str(e)
-            }
-            
+            }      
     @staticmethod
     def send_verification_email(email_data):
         """Send verification email with rollback support"""
