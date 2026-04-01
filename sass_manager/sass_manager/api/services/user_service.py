@@ -107,17 +107,20 @@ class UserService:
                 "country": country
             }
             
-            # CHANGE THIS LINE - use params instead of json
             response = requests.post(url, params=payload, timeout=15)
             
-            # FIX 1: Check if response has content
+            # Log the full response for debugging
+            frappe.log_error(f"Response status: {response.status_code}", "Create Admin User")
+            frappe.log_error(f"Response text: {response.text}", "Create Admin User")
+            
+            # Check if response has content
             if not response.text:
                 return {
                     "status": "error", 
                     "message": f"Empty response from {base_url}. Site may not be ready."
                 }
             
-            # FIX 2: Try to parse JSON with error handling
+            # Parse JSON response
             try:
                 res = response.json()
             except Exception as json_error:
@@ -128,12 +131,14 @@ class UserService:
                     "message": f"Invalid response from site (not JSON): {response.text[:100]}"
                 }
             
-            # The response from create_admin_user is already the result, not nested in "message"
-            # So we check res directly
+            # Check if the response indicates success
             if res.get("status") != "success":
+                # Log the actual error message from the client site
+                error_msg = res.get("message", "Account creation failed")
+                frappe.log_error(f"Client site error: {error_msg}", "Create Admin User")
                 return {
                     "status": "error",
-                    "message": res.get("message", "Account creation failed")
+                    "message": error_msg
                 }
             
             return res
@@ -153,7 +158,7 @@ class UserService:
             return {
                 "status": "error", 
                 "message": str(e)
-            }      
+            }
     @staticmethod
     def send_verification_email(email_data):
         """Send verification email with rollback support"""
