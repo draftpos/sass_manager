@@ -134,7 +134,7 @@ def resend_verification_link():
         })
         
         # Send new verification email
-        verification_link = f"{frappe.utils.get_url()}/api/method/saas_manager.api.verify_user_email?token={token}&email={email}"
+        verification_link = f"{frappe.utils.get_url()}/api/method/sass_manager.api.verify_user_email?token={token}&email={email}"
         
         EmailModel.send_verification_email(
             recipient_email=email,
